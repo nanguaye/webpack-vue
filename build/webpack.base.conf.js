@@ -22,12 +22,12 @@ function postcss() {
 module.exports = {
     // 入口文件，path.resolve()方法，可以结合我们给定的两个参数最后生成绝对路径，最终指向的就是我们的index.js文件
     entry: {
-        index: path.resolve(__dirname, '../app/index/index.js') // 对象里index这个key 名称会作为output里面 filename 的[name]输出.
+        index: path.resolve(__dirname, '../app/myApp/index.js') // 对象里index这个key 名称会作为output里面 filename 的[name]输出.
     },
     // 输出配置
     output: {
-        // 输出路径是 myProject/output/outjs
-        path: path.resolve(__dirname, '../output/outjs'),
+        // 输出路径是 myProject/out/
+        path: path.resolve(__dirname, '../out/js'),
         publicPath: '/', // 需要去了解下!
         filename: '[name].[hash].js',
         chunkFilename: '[id].[chunkhash].js'
@@ -46,7 +46,9 @@ module.exports = {
     resolve: {
         extensions: ['', '.js', '.vue'],
         alias: {
-            assets: path.join(__dirname, '../app/index/assets')
+            public: path.join(__dirname, '../app/myApp/public'),
+            sdk: path.join(__dirname, '../app/myApp/sdk'),
+            components: path.join(__dirname, '../app/myApp/components')
         }
     },
     module: {
@@ -69,6 +71,9 @@ module.exports = {
                     // 生成的文件名,[name]为原始文件名,[hash:8]为根据文件内容生成8位md5值,[ext]为原始文件扩展名
                     name: 'resources/[name].[hash:8].[ext]'
                 }
+            },
+            {test: /\.json$/,
+                loader: 'json'
             }
         ]
     },

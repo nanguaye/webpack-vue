@@ -5,6 +5,10 @@
 var express = require('express')
 var webpack = require('webpack')
 var ip = require('ip')
+var path =require('path')
+var history = require('connect-history-api-fallback')
+var url = require('url');
+var proxy = require('proxy-middleware');
 // dev环境下的配置
 var config = require('./webpack.dev.conf')
 // 打开浏览器
@@ -14,6 +18,12 @@ var app = express()
 // 调用webpack并把配置传递过去
 var compiler = webpack(config)
 
+// 不走 express中间件 服务器路由
+app.use(history({
+    index: '/home.html'
+}))
+// proxy 代理,以/api开头的都代理到 http://192.168.145.109:3000/
+app.use('/api', proxy(url.parse('http://192.168.145.109:3000/')))
 // 使用 webpack-dev-middleware 中间件, 把compiler参数形式传到 dev-middleware fun里面.
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
     publicPath: config.output.publicPath,
@@ -34,11 +44,11 @@ compiler.plugin('compilation', function (compilation) {
     })
 })
 
-
-// 注册中间件
+//
 app.use(devMiddleware)
 app.use(hotMiddleware)
-
+// 托管项目中的静态资源
+app.use(express.static(path.join(__dirname, '../app/myApp/public')));
 // 监听 8888端口，开启服务器
 app.listen(config.devServer.port, function (err) {
     console.log(config.devServer.host, config.devServer.port)
@@ -47,7 +57,7 @@ app.listen(config.devServer.port, function (err) {
         return
     }
     // 自动打开浏览器
-    var uri = `http://${config.devServer.host}:${config.devServer.port}/dev/out-index.html`
+    var uri = `http://${config.devServer.host}:${config.devServer.port}/home.html`
     opn(uri,{app: 'google chrome'}) // 默认chrome打开
     console.log('Listening at'+ uri)
 })

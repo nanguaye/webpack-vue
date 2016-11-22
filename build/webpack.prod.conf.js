@@ -19,8 +19,8 @@ config.plugins = [
     new ExtractTextPlugin("../[name].[contenthash].css"),
 
     new HtmlWebpackPlugin({
-        filename: '../out-index.html',
-        template: path.resolve(__dirname, '../app/index/index.html'),
+        filename: '../out-myApp.html',
+        template: path.resolve(__dirname, '../app/myApp/myApp.html'),
         inject: true
     })
 ];
