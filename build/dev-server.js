@@ -7,8 +7,8 @@ var webpack = require('webpack')
 var ip = require('ip')
 var path =require('path')
 var history = require('connect-history-api-fallback')
-var url = require('url');
-var proxy = require('proxy-middleware');
+var url = require('url')
+var proxy = require('http-proxy-middleware')
 // dev环境下的配置
 var config = require('./webpack.dev.conf')
 // 打开浏览器
@@ -22,8 +22,8 @@ var compiler = webpack(config)
 app.use(history({
     index: '/home.html'
 }))
-// proxy 代理,以/api开头的都代理到 http://192.168.145.109:3000/
-app.use('/api', proxy(url.parse('http://192.168.145.109:3000/')))
+// proxy 代理,以/api开头的都代理到 http://192.168.145.109:3000/  192.168.141.147:3000/
+app.use('/shopping', proxy({target: 'https://mainsite-restapi.ele.me/', changeOrigin: true}))
 // 使用 webpack-dev-middleware 中间件, 把compiler参数形式传到 dev-middleware fun里面.
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
     publicPath: config.output.publicPath,

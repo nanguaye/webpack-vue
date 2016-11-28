@@ -227,7 +227,7 @@
     methods: {
       fetchUrl(){
         console.log('发送请求')
-        let url = "/api/json/tsConfig.json?num=111&&name=ych"
+        let url = "/shopping/restaurants?latitude=30.32347&longitude=120.17383&offset=0&limit=20&extras[]=activities"
         myFetch(url, 'GET').then((res)=>{
           console.log('suc', res)
         }).catch((err)=>{
